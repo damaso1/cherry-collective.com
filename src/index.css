@@ -1,0 +1,370 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Nunito:wght@400;500;600;700&family=Pacifico&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================================
+   CHERRY THEME - Global Styles
+   ======================================== */
+
+:root {
+  /* Primary Cherry Reds */
+  --cherry-ripe: #C41E3A;
+  --cherry-dark: #8B0000;
+  --cherry-bright: #DC143C;
+  --cherry-light: #FF6B6B;
+  --cherry-blush: #FFB3BA;
+
+  /* Stem & Leaf Greens */
+  --stem-green: #228B22;
+  --leaf-green: #32CD32;
+  --leaf-dark: #006400;
+
+  /* Backgrounds */
+  --bark-dark: #1A0A0A;
+  --bark-medium: #2D1515;
+  --bark-light: #3D2020;
+
+  /* Accents */
+  --cream: #FFF8DC;
+  --gold: #FFD700;
+
+  font-family: 'Nunito', system-ui, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color-scheme: dark;
+  color: rgba(255, 255, 255, 0.95);
+  background-color: var(--bark-dark);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  min-height: 100vh;
+  background: linear-gradient(180deg, #1A0A0A 0%, #0D0505 100%);
+}
+
+#root {
+  min-height: 100vh;
+}
+
+/* ========================================
+   Typography
+   ======================================== */
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-weight: 600;
+  line-height: 1.2;
+}
+
+.font-display {
+  font-family: 'Playfair Display', Georgia, serif;
+}
+
+.font-body {
+  font-family: 'Nunito', sans-serif;
+}
+
+.font-mono {
+  font-family: 'JetBrains Mono', monospace;
+}
+
+.font-accent {
+  font-family: 'Pacifico', cursive;
+}
+
+/* ========================================
+   Cherry Scrollbar
+   ======================================== */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bark-dark);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, var(--cherry-ripe) 0%, var(--cherry-dark) 100%);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: linear-gradient(180deg, var(--cherry-bright) 0%, var(--cherry-ripe) 100%);
+}
+
+/* ========================================
+   Text Selection
+   ======================================== */
+
+::selection {
+  background: var(--cherry-blush);
+  color: var(--cherry-dark);
+}
+
+/* ========================================
+   Links
+   ======================================== */
+
+a {
+  color: var(--cherry-light);
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--cherry-bright);
+}
+
+/* ========================================
+   Utility Classes
+   ======================================== */
+
+.cherry-glow {
+  box-shadow: 0 0 20px rgba(196, 30, 58, 0.4), 0 0 40px rgba(196, 30, 58, 0.2);
+}
+
+.cherry-glow-intense {
+  box-shadow: 0 0 20px rgba(196, 30, 58, 0.6), 0 0 40px rgba(196, 30, 58, 0.4), 0 0 60px rgba(196, 30, 58, 0.2);
+}
+
+.cherry-border {
+  border: 1px solid rgba(196, 30, 58, 0.3);
+}
+
+.cherry-border-glow {
+  border: 1px solid rgba(196, 30, 58, 0.5);
+  box-shadow: 0 0 10px rgba(196, 30, 58, 0.3);
+}
+
+.glass {
+  background: rgba(26, 10, 10, 0.7);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(196, 30, 58, 0.1);
+}
+
+.glass-cherry {
+  background: rgba(196, 30, 58, 0.1);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(196, 30, 58, 0.2);
+}
+
+/* ========================================
+   Gradients
+   ======================================== */
+
+.bg-cherry-gradient {
+  background: linear-gradient(135deg, var(--cherry-ripe) 0%, var(--cherry-dark) 100%);
+}
+
+.bg-cherry-shine {
+  background: linear-gradient(135deg, var(--cherry-light) 0%, var(--cherry-ripe) 50%, var(--cherry-dark) 100%);
+}
+
+.text-cherry-gradient {
+  background: linear-gradient(135deg, var(--cherry-light) 0%, var(--cherry-ripe) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+/* ========================================
+   Animations
+   ======================================== */
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 5px var(--cherry-ripe), 0 0 10px var(--cherry-ripe);
+  }
+  50% {
+    box-shadow: 0 0 15px var(--cherry-ripe), 0 0 30px var(--cherry-ripe), 0 0 45px var(--cherry-light);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes blossom-fall {
+  0% {
+    transform: translateY(-100%) rotate(0deg);
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(100vh) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+.animate-float {
+  animation: float 3s ease-in-out infinite;
+}
+
+.animate-pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.animate-shimmer {
+  background: linear-gradient(
+    90deg,
+    transparent 0%,
+    rgba(255, 107, 107, 0.1) 50%,
+    transparent 100%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 2s infinite;
+}
+
+/* ========================================
+   Terminal / Feed Styles
+   ======================================== */
+
+.terminal {
+  font-family: 'JetBrains Mono', monospace;
+  background: rgba(0, 0, 0, 0.8);
+  border: 1px solid rgba(196, 30, 58, 0.3);
+  border-radius: 8px;
+}
+
+.terminal-line {
+  color: var(--cherry-light);
+  font-size: 0.875rem;
+  line-height: 1.6;
+}
+
+.terminal-timestamp {
+  color: rgba(255, 255, 255, 0.5);
+}
+
+.terminal-icon {
+  color: var(--cherry-ripe);
+}
+
+/* ========================================
+   Table Styles
+   ======================================== */
+
+.cherry-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+}
+
+.cherry-table th {
+  background: rgba(196, 30, 58, 0.1);
+  border-bottom: 1px solid rgba(196, 30, 58, 0.3);
+  padding: 0.75rem 1rem;
+  text-align: left;
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.cherry-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.cherry-table tr:hover td {
+  background: rgba(196, 30, 58, 0.05);
+}
+
+.cherry-table tr.ripe:hover td {
+  background: rgba(196, 30, 58, 0.1);
+  box-shadow: inset 0 0 20px rgba(196, 30, 58, 0.1);
+}
+
+/* ========================================
+   Form Elements
+   ======================================== */
+
+input, textarea, select {
+  font-family: inherit;
+  font-size: 1rem;
+  background: rgba(26, 10, 10, 0.8);
+  border: 1px solid rgba(196, 30, 58, 0.3);
+  border-radius: 8px;
+  padding: 0.75rem 1rem;
+  color: white;
+  transition: all 0.2s ease;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  border-color: var(--cherry-ripe);
+  box-shadow: 0 0 0 3px rgba(196, 30, 58, 0.2);
+}
+
+input::placeholder, textarea::placeholder {
+  color: rgba(255, 255, 255, 0.4);
+}
+
+/* ========================================
+   Button Base
+   ======================================== */
+
+button {
+  font-family: inherit;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  border: none;
+  border-radius: 8px;
+  padding: 0.75rem 1.5rem;
+  transition: all 0.2s ease;
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ========================================
+   Page Transitions
+   ======================================== */
+
+.page-enter {
+  animation: slide-up 0.4s ease-out forwards;
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

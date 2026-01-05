@@ -1,0 +1,12 @@
+# Cherrypicker Collective - robots.txt
+# https://cherrypicker-collective.com
+
+User-agent: *
+Allow: /
+Disallow: /api/
+Disallow: /dashboard/
+Disallow: /leads/
+Disallow: /basket/
+
+# Sitemaps
+Sitemap: https://cherrypicker-collective.com/sitemap.xml
