@@ -3,6 +3,7 @@ import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { DashboardLayout } from './components/layout';
 import { PageTransitionProvider } from './core/transitions';
 import {
+  SpatialLandingPage,
   LandingPage,
   DashboardPage,
   LeadDetailPage,
@@ -27,7 +28,10 @@ function App() {
         <PageTransitionProvider>
           <Routes>
             {/* Public routes */}
-            <Route path="/" element={<LandingPage />} />
+            {/* Use SpatialLandingPage for immersive 3D tree hero */}
+            <Route path="/" element={<SpatialLandingPage />} />
+            {/* Keep classic landing available at /classic */}
+            <Route path="/classic" element={<LandingPage />} />
             <Route path="/pricing" element={<PricingPage />} />
 
             {/* Dashboard routes - wrapped in layout */}
