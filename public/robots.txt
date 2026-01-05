@@ -1,12 +1,46 @@
-# Cherrypicker Collective - robots.txt
-# https://cherrypicker-collective.com
+# Cherry Enterprise - robots.txt
+# https://cherry-collective.com
+# ABN: 89 767 167 506 | NCAGE: Z1ME7
 
 User-agent: *
 Allow: /
+Allow: /pricing
+Allow: /terms
+Allow: /privacy
+Allow: /ip
+
+# Protected areas
 Disallow: /api/
 Disallow: /dashboard/
 Disallow: /leads/
 Disallow: /basket/
+Disallow: /analytics/
+Disallow: /settings/
+
+# Block AI scraping bots
+User-agent: GPTBot
+Disallow: /
+
+User-agent: ChatGPT-User
+Disallow: /
+
+User-agent: CCBot
+Disallow: /
+
+User-agent: anthropic-ai
+Disallow: /
+
+User-agent: Claude-Web
+Disallow: /
+
+User-agent: Google-Extended
+Disallow: /
+
+User-agent: Bytespider
+Disallow: /
+
+User-agent: cohere-ai
+Disallow: /
 
 # Sitemaps
-Sitemap: https://cherrypicker-collective.com/sitemap.xml
+Sitemap: https://cherry-collective.com/sitemap.xml

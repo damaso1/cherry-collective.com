@@ -10,6 +10,11 @@ import {
   BasketPage,
   PricingPage,
 } from './pages';
+import {
+  TermsOfService,
+  PrivacyPolicy,
+  IntellectualProperty,
+} from './pages/legal';
 
 // Create a client
 const queryClient = new QueryClient({
@@ -33,6 +38,11 @@ function App() {
             {/* Keep classic landing available at /classic */}
             <Route path="/classic" element={<LandingPage />} />
             <Route path="/pricing" element={<PricingPage />} />
+
+            {/* Legal pages */}
+            <Route path="/terms" element={<TermsOfService />} />
+            <Route path="/privacy" element={<PrivacyPolicy />} />
+            <Route path="/ip" element={<IntellectualProperty />} />
 
             {/* Dashboard routes - wrapped in layout */}
             <Route element={<DashboardLayout />}>

@@ -42,6 +42,15 @@ export const ImmersiveCanvas: React.FC<ImmersiveCanvasProps> = ({
 
   return (
     <div className={`fixed inset-0 -z-10 ${className}`}>
+      {/* IP Watermark - subtle corner mark */}
+      <div className="absolute bottom-2 right-2 z-10 pointer-events-none select-none opacity-20 hover:opacity-40 transition-opacity">
+        <div className="text-[10px] text-white/50 font-mono tracking-tight">
+          <span className="text-cherry-ripe/60">Immersive Orchard</span>
+          <span className="mx-1 text-white/30">|</span>
+          <span>Cherry Enterprise</span>
+        </div>
+      </div>
+
       <Canvas
         dpr={dpr as [number, number]}
         gl={{
