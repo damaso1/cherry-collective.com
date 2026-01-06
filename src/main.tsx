@@ -1,4 +1,4 @@
-import { StrictMode, Suspense, lazy } from 'react';
+import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import './index.css';
@@ -9,9 +9,6 @@ import { ImmersiveProvider } from './core/providers/ImmersiveProvider';
 import { AudioManager, MuteToggle } from './core/audio/AudioManager';
 import CherryCursor from './core/cursor/CherryCursor';
 import CursorTrail from './core/cursor/CursorTrail';
-
-// Lazy load heavy 3D components
-const ImmersiveCanvas = lazy(() => import('./core/canvas/ImmersiveCanvas'));
 
 // ============================================================================
 // INTELLECTUAL PROPERTY PROTECTION
@@ -119,13 +116,6 @@ const queryClient = new QueryClient({
   },
 });
 
-// Loading fallback for 3D canvas
-const CanvasLoader = () => (
-  <div className="fixed inset-0 -z-10 bg-bark-dark">
-    <div className="absolute inset-0 bg-gradient-radial from-cherry-dark/20 via-transparent to-transparent" />
-  </div>
-);
-
 // Main app wrapper with all providers
 const Root = () => {
   return (
@@ -133,16 +123,11 @@ const Root = () => {
       <QueryClientProvider client={queryClient}>
         <ImmersiveProvider>
           <AudioManager>
-            {/* 3D Background Canvas */}
-            <Suspense fallback={<CanvasLoader />}>
-              <ImmersiveCanvas enableOrchard={true} enableParticles={true} />
-            </Suspense>
-
             {/* Custom Cursor */}
             <CherryCursor />
             <CursorTrail />
 
-            {/* Main App */}
+            {/* Main App - pages handle their own 3D scenes */}
             <App />
 
             {/* Audio Mute Toggle */}

@@ -115,7 +115,7 @@ const SpatialLandingPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-bark-dark overflow-hidden">
       {/* Full-screen 3D Canvas */}
-      <div className="fixed inset-0">
+      <div className="fixed inset-0 z-0">
         <Suspense fallback={<TreeLoader />}>
           <TreeCanvas onNavigate={handleNavigate} />
         </Suspense>
