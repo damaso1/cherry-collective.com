@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useRef, useState, useMemo } from 'react';
 import { useFrame } from '@react-three/fiber';
 import type { ThreeEvent } from '@react-three/fiber';
 import { MeshTransmissionMaterial, Html } from '@react-three/drei';
@@ -12,6 +12,101 @@ interface GlassCherryProps {
   scale?: number;
   delay?: number;
 }
+
+// Burst particles that spawn on click
+const BurstParticles: React.FC<{
+  active: boolean;
+  color: string;
+  onComplete: () => void;
+}> = ({ active, color, onComplete }) => {
+  const particlesRef = useRef<THREE.Points>(null);
+  const startTimeRef = useRef<number>(0);
+  const velocitiesRef = useRef<Float32Array | null>(null);
+
+  const count = 20;
+  const positions = useMemo(() => new Float32Array(count * 3), []);
+  const sizes = useMemo(() => {
+    const s = new Float32Array(count);
+    for (let i = 0; i < count; i++) {
+      s[i] = Math.random() * 0.08 + 0.04;
+    }
+    return s;
+  }, []);
+
+  // Initialize velocities
+  useMemo(() => {
+    velocitiesRef.current = new Float32Array(count * 3);
+    for (let i = 0; i < count; i++) {
+      const theta = Math.random() * Math.PI * 2;
+      const phi = Math.random() * Math.PI;
+      const speed = 2 + Math.random() * 3;
+      velocitiesRef.current[i * 3] = Math.sin(phi) * Math.cos(theta) * speed;
+      velocitiesRef.current[i * 3 + 1] = Math.cos(phi) * speed + 1;
+      velocitiesRef.current[i * 3 + 2] = Math.sin(phi) * Math.sin(theta) * speed;
+    }
+  }, []);
+
+  useFrame((state, delta) => {
+    if (!active || !particlesRef.current || !velocitiesRef.current) return;
+
+    if (startTimeRef.current === 0) {
+      startTimeRef.current = state.clock.elapsedTime;
+      // Reset positions to center
+      for (let i = 0; i < count * 3; i++) {
+        positions[i] = 0;
+      }
+    }
+
+    const elapsed = state.clock.elapsedTime - startTimeRef.current;
+
+    if (elapsed > 0.8) {
+      startTimeRef.current = 0;
+      onComplete();
+      return;
+    }
+
+    const posArray = particlesRef.current.geometry.attributes.position.array as Float32Array;
+    const gravity = -8;
+    const drag = 0.98;
+
+    for (let i = 0; i < count; i++) {
+      // Apply velocity
+      posArray[i * 3] += velocitiesRef.current[i * 3] * delta;
+      posArray[i * 3 + 1] += velocitiesRef.current[i * 3 + 1] * delta;
+      posArray[i * 3 + 2] += velocitiesRef.current[i * 3 + 2] * delta;
+
+      // Apply gravity and drag
+      velocitiesRef.current[i * 3 + 1] += gravity * delta;
+      velocitiesRef.current[i * 3] *= drag;
+      velocitiesRef.current[i * 3 + 2] *= drag;
+    }
+
+    particlesRef.current.geometry.attributes.position.needsUpdate = true;
+
+    // Fade out
+    const material = particlesRef.current.material as THREE.PointsMaterial;
+    material.opacity = 1 - (elapsed / 0.8);
+  });
+
+  if (!active) return null;
+
+  return (
+    <points ref={particlesRef}>
+      <bufferGeometry>
+        <bufferAttribute attach="attributes-position" args={[positions, 3]} />
+        <bufferAttribute attach="attributes-size" args={[sizes, 1]} />
+      </bufferGeometry>
+      <pointsMaterial
+        size={0.1}
+        color={color}
+        transparent
+        opacity={1}
+        sizeAttenuation
+        blending={THREE.AdditiveBlending}
+      />
+    </points>
+  );
+};
 
 // Physics spring configuration
 const SPRING_CONFIG = {
@@ -184,6 +279,7 @@ export const GlassCherry: React.FC<GlassCherryProps> = ({
   const groupRef = useRef<THREE.Group>(null);
   const [hovered, setHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
+  const [bursting, setBursting] = useState(false);
 
   // Physics state for jiggle
   const physics = useRef({
@@ -193,6 +289,11 @@ export const GlassCherry: React.FC<GlassCherryProps> = ({
     targetScale: scale,
     currentScale: scale,
   });
+
+  // Play burst sound
+  const playBurstSound = () => {
+    window.dispatchEvent(new CustomEvent('playSound', { detail: { soundId: 'burst' } }));
+  };
 
   // Spring physics for jiggle effect
   useFrame((state, delta) => {
@@ -259,15 +360,24 @@ export const GlassCherry: React.FC<GlassCherryProps> = ({
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
     setClicked(true);
+    setBursting(true);
+    playBurstSound();
 
     // Burst jiggle on click
-    physics.current.rotVelocity.x = (Math.random() - 0.5) * 0.3;
-    physics.current.rotVelocity.z = (Math.random() - 0.5) * 0.3;
+    physics.current.rotVelocity.x = (Math.random() - 0.5) * 0.4;
+    physics.current.rotVelocity.z = (Math.random() - 0.5) * 0.4;
+
+    // Scale pulse effect
+    physics.current.currentScale = scale * 1.3;
 
     setTimeout(() => {
       setClicked(false);
       onClick?.();
-    }, 150);
+    }, 200);
+  };
+
+  const handleBurstComplete = () => {
+    setBursting(false);
   };
 
   return (
@@ -288,6 +398,12 @@ export const GlassCherry: React.FC<GlassCherryProps> = ({
         visible={hovered}
         position={[0, 1, 0]}
       />
+      {/* Burst particles on click */}
+      <BurstParticles
+        active={bursting}
+        color={color}
+        onComplete={handleBurstComplete}
+      />
     </group>
   );
 };
@@ -305,6 +421,7 @@ export const GlassCherryPair: React.FC<GlassCherryProps & { secondaryColor?: str
   const groupRef = useRef<THREE.Group>(null);
   const [hovered, setHovered] = useState(false);
   const [clicked, setClicked] = useState(false);
+  const [bursting, setBursting] = useState(false);
 
   // Physics state
   const physics = useRef({
@@ -312,6 +429,11 @@ export const GlassCherryPair: React.FC<GlassCherryProps & { secondaryColor?: str
     rotVelocity: new THREE.Vector3(0, 0, 0),
     currentScale: scale,
   });
+
+  // Play burst sound
+  const playBurstSound = () => {
+    window.dispatchEvent(new CustomEvent('playSound', { detail: { soundId: 'burst' } }));
+  };
 
   useFrame((state, delta) => {
     if (!groupRef.current) return;
@@ -369,15 +491,26 @@ export const GlassCherryPair: React.FC<GlassCherryProps & { secondaryColor?: str
   const handleClick = (e: ThreeEvent<MouseEvent>) => {
     e.stopPropagation();
     setClicked(true);
+    setBursting(true);
+    playBurstSound();
+
     physics.current.rotVelocity.set(
-      (Math.random() - 0.5) * 0.2,
+      (Math.random() - 0.5) * 0.3,
       0,
-      (Math.random() - 0.5) * 0.2
+      (Math.random() - 0.5) * 0.3
     );
+
+    // Scale pulse
+    physics.current.currentScale = scale * 1.25;
+
     setTimeout(() => {
       setClicked(false);
       onClick?.();
-    }, 150);
+    }, 200);
+  };
+
+  const handleBurstComplete = () => {
+    setBursting(false);
   };
 
   return (
@@ -388,6 +521,10 @@ export const GlassCherryPair: React.FC<GlassCherryProps & { secondaryColor?: str
       onPointerLeave={handlePointerLeave}
       onClick={handleClick}
     >
+      {/* Burst particles */}
+      <BurstParticles active={bursting} color={color} onComplete={handleBurstComplete} />
+      <BurstParticles active={bursting} color={secondaryColor} onComplete={() => {}} />
+
       {/* Shared stem */}
       <mesh position={[0, 0.7, 0]} rotation={[0, 0, 0]}>
         <cylinderGeometry args={[0.025, 0.02, 0.5, 8]} />
